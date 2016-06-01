@@ -22,13 +22,6 @@
 
 使用者可以根据自身需求自行更改绘制测量逻辑。
 
-支持以下各种样式：
-
-
-![](http://7xuwb4.com1.z0.glb.clouddn.com/QQ%E6%88%AA%E5%9B%BE20160530160401.png)
-
-![](http://7xuwb4.com1.z0.glb.clouddn.com/QQ%E6%88%AA%E5%9B%BE20160530161531.png)
-
 以下是动态绘制展示图：
 
 ![](http://7xuwb4.com1.z0.glb.clouddn.com/device-2016-06-01-185329.mp4_1464778588.gif)
