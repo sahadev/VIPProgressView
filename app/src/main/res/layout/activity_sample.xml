@@ -15,14 +15,23 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="ViP Progress View:"
+        android:text="VIP Progress View :"
         android:textColor="@color/white" />
 
     <com.sahadev.view.VipProgressView
+        android:id="@+id/vipProgressView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:padding="10dp"
         custom:currentNum="1"
         custom:minStandardNum="4" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:onClick="start"
+        android:text="点我启动进度演示" />
 </LinearLayout>

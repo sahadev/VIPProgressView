@@ -4,9 +4,13 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 
 import com.sahadev.example.vipprogressview.R;
@@ -63,8 +67,10 @@ public class VipProgressView extends View {
      */
     private List<Drawable> mDrawables;
 
-    private int[] drawableRes = {R.drawable.ic_vip_onprocess, R.drawable.ic_vip_onprocess_s,
-            R.drawable.ic_vip_final, R.drawable.ic_vip_final_s};
+    private DisplayMetrics metrics = new DisplayMetrics();
+
+    private int[] drawableRes = {R.mipmap.ic_vip_onprocess, R.mipmap.ic_vip_onprocess_s,
+            R.mipmap.ic_vip_final, R.mipmap.ic_vip_final_s};
 
     public VipProgressView(Context context) {
         super(context);
@@ -84,7 +90,6 @@ public class VipProgressView extends View {
     }
 
     private void init(Context context, AttributeSet attrs) {
-        initDrawableInfo();
 
         mLineCheckedPaint = new Paint();
         mLineCheckedPaint.setColor(getResources().getColor(R.color.color_ff2741));
@@ -117,17 +122,22 @@ public class VipProgressView extends View {
         mDrawables = new ArrayList<>();
 
         for (int i = 0; i < drawableRes.length; i++) {
-            if (i % 2 == 0)//每套图片只取一张，所以在存放图片的时候要连续存放
-                continue;
             Drawable drawable = getResources().getDrawable(drawableRes[i]);
+
             mDrawables.add(drawable);
 
-            if (drawable.getIntrinsicHeight() > mContentHeight)
-                mContentHeight = drawable.getIntrinsicHeight();
+            if (drawable.getIntrinsicHeight() / 3 > mContentHeight)
+                mContentHeight = (int) (drawable.getIntrinsicHeight());
         }
 
     }
 
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        getDisplay().getMetrics(metrics);
+        initDrawableInfo();
+    }
 
     /**
      * 设置进度数据，该方法对参数进行了一次包装。该方法适用于当当前单数等于最大单数时，直接完成达阵，这里的进度也表示了会员状态
@@ -212,22 +222,20 @@ public class VipProgressView extends View {
 
         mPaddingTop = getPaddingTop();
 
-        if (widthMode == MeasureSpec.AT_MOST || widthMode == MeasureSpec.EXACTLY) {
-            //计算实际的内容区域宽度
-            int contentWidth = widthSize - getPaddingLeft() - getPaddingRight();
-            //内容区域的总长度 = mTotleStage * mOffDrawable.width + (mTotleStage - 1) * mProgressDrawable
+        //计算实际的内容区域宽度
+        int contentWidth = widthSize - getPaddingLeft() - getPaddingRight();
+        //内容区域的总长度 = mTotleStage * mOffDrawable.width + (mTotleStage - 1) * mProgressDrawable
 
-            int drawableTotolWidth = 0;
-            for (int i = 0; i < mTotleStage; i++) {
-                if (i != mTotleStage - 1) {//如果不是最后一张图片，则使用前面的图片宽度进行计算
-                    drawableTotolWidth += mDrawables.get(0).getIntrinsicWidth();
-                } else {
-                    drawableTotolWidth += mDrawables.get(1).getIntrinsicWidth();
-                }
+        int drawableTotolWidth = 0;
+        for (int i = 0; i < mTotleStage; i++) {
+            if (i != mTotleStage - 1) {//如果不是最后一张图片，则使用前面的图片宽度进行计算
+                drawableTotolWidth += mDrawables.get(0).getIntrinsicWidth();
+            } else {
+                drawableTotolWidth += mDrawables.get(1).getIntrinsicWidth();
             }
-            //计算进度条图像宽度
-            mProgressDrawableWidth = (contentWidth - drawableTotolWidth) / (mTotleStage - 1);
         }
+        //计算进度条图像宽度
+        mProgressDrawableWidth = (contentWidth - drawableTotolWidth) / (mTotleStage - 1);
 
         int finalHeight = mContentHeight + getPaddingTop() + getPaddingBottom();
         setMeasuredDimension(widthMeasureSpec, MeasureSpec.makeMeasureSpec(finalHeight, heightMode));
@@ -256,12 +264,17 @@ public class VipProgressView extends View {
             if (i % 2 == 0) {
                 //这种情况下是状态图标
                 if (stateBean.isChecked) {
-                    tempIconDrawable = getResources().getDrawable(drawableRes[i == mTotleStage * 2 - 2 ? 3 : 1]);
+                    tempIconDrawable = mDrawables.get(i == mTotleStage * 2 - 2 ? 3 : 1);
                 } else {
-                    tempIconDrawable = getResources().getDrawable(drawableRes[i == mTotleStage * 2 - 2 ? 2 : 0]);
+                    tempIconDrawable = mDrawables.get(i == mTotleStage * 2 - 2 ? 2 : 0);
                 }
-                int intrinsicWidth = tempIconDrawable.getIntrinsicWidth();
-                int intrinsicHeight = tempIconDrawable.getIntrinsicHeight();
+                int intrinsicWidth = (int) (tempIconDrawable.getIntrinsicWidth());
+                int intrinsicHeight = (int) (tempIconDrawable.getIntrinsicHeight());
+
+                Rect bounds = tempIconDrawable.getBounds();
+
+                Log.i(TAG, "intrinsicWidth = " + intrinsicWidth + " , intrinsicHeight = " + intrinsicHeight + " , bounds = " + bounds.width() + "," + bounds.height());
+
                 int centerOffset = (mContentHeight - intrinsicHeight) / 2;
                 //居中绘制方法
                 tempIconDrawable.setBounds(sum, mPaddingTop + centerOffset, sum + intrinsicWidth, mPaddingTop + intrinsicHeight + centerOffset);
