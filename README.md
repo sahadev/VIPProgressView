@@ -1,7 +1,7 @@
 # VIPProgressView
 某种进度状态显示控件
 
-![](http://7xuwb4.com1.z0.glb.clouddn.com/QQ%E6%88%AA%E5%9B%BE20160530160310.png)
+![](http://7xuwb4.com1.z0.glb.clouddn.com/QQ%E6%88%AA%E5%9B%BE20160530160310.png?imageView2/1/w/200/h/200)
 
 ----------
 
@@ -29,4 +29,4 @@
 
 下图是阿里出品的应用淘票票的会员样式：
 
-![](http://7xuwb4.com1.z0.glb.clouddn.com/QQ%E6%88%AA%E5%9B%BE20160530161631.png)
+![](http://7xuwb4.com1.z0.glb.clouddn.com/QQ%E6%88%AA%E5%9B%BE20160530161631.png?imageView2/1/w/200/h/200)
